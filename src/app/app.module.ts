@@ -10,11 +10,12 @@ import { InputRestrictDirective } from './directive/input-restrict.directive';
 import { TrackerComponent } from './tracker/tracker.component';
 import { HeaderComponent } from './header/header.component';
 import { VisualizationComponent } from './visualization/visualization.component';
-
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SavingModalComponent } from './saving-modal/saving-modal.component';
 @NgModule({
-  declarations: [AppComponent, HighlightDirective, MonthFilterPipe, InputRestrictDirective, TrackerComponent, HeaderComponent, VisualizationComponent],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
+  declarations: [AppComponent, HighlightDirective, MonthFilterPipe, InputRestrictDirective, TrackerComponent, HeaderComponent, VisualizationComponent, SavingModalComponent],
+  imports: [MatDialogModule,BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

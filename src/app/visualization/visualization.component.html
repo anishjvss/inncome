@@ -1,12 +1,65 @@
-<div></div>
+<h2>Income and Expense Dashboard</h2>
+<div class="d-flex justify-content-center align-items-center aj mt-4">
+  <button class="btn btn-primary arrow" (click)="decrementYear()">
+    <
+  </button>
+  <h4 class="fy mx-3">
+    <strong>{{ selectedYear }}</strong>
+  </h4>
+  <button class="btn btn-primary arrow" (click)="incrementYear()">
+    >
+  </button>
+</div> <br>
 
-<div class="legend">
-  <div>
-    <span class="legend-color income"></span>
-    <span>Income</span>
-  </div>
-  <div>
-    <span class="legend-color expense"></span>
-    <span>Expense</span>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h3 class="bal">
+    <i class="fas fa-wallet"></i> 
+    <span class="h" [style.color]="'black'">Expected Annual Saving: Rs {{ expectedAnnualSaving }}</span>
+    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="!expectedAnnualSaving">Add</button>
+    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="expectedAnnualSaving">Edit</button>
+  </h3>
+  <div class="progress-ring">
+  <div class="progress-circle" [ngStyle]="{'stroke-dashoffset': circumference - (achievedSavingPercentage / 100) * circumference}">
+    <span class="progress-percentage">{{achievedSavingPercentage}}%</span>
   </div>
 </div>
+</div>
+<br>
+<div class="row mt-4">
+  <div class="col-lg-4">
+    <h4 class="bal income-field">
+      <i class="fas fa-coins"></i>
+      <span class="h" [style.color]="'white'">Income: Rs {{ totalIncome }}</span>
+    </h4>
+  </div>
+  <div class="col-lg-4">
+    <h4 class="bal save-field">
+      <i class="fas fa-wallet"></i> 
+      <span class="h" [style.color]="'white'">Saved: Rs {{ totalSaved }}</span>
+    </h4>
+  </div>
+  <div class="col-lg-4">
+    <h4 class="bal expense-field">
+      <i class="fas fa-credit-card"></i> 
+      <span class="h" [style.color]="'white'">Expense: Rs {{ totalExpense }}</span>
+    </h4>
+  </div>
+  
+</div>
+<br>
+<div class="row">
+  <div class="col-lg-4 card">
+    <h3>Doughnut Chart</h3>
+    <canvas class="pie" id="doughnutChart"></canvas>
+  </div>
+  <div class="col-lg-4 card">
+    <h3>Bar Chart</h3>
+    <canvas id="barChart"></canvas>
+  </div>
+  <div class="col-lg-4 card">
+    <h3>Line Chart</h3>
+    <canvas id="lineChart"></canvas>
+  </div>
+</div>
+
+

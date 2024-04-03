@@ -1,0 +1,10 @@
+<h2 class="cen" mat-dialog-title>Expected Annual Saving</h2>
+<div  mat-dialog-content>
+  <div mat-form-field appearance="fill">
+    <!-- <div mat-label>Enter your expected annual saving</div> -->
+    <input appInputRestrict="number" [(ngModel)]="data.expectedAnnualSaving" placeholder="Enter Amount">
+  </div>
+</div>
+<div class="cen" mat-dialog-actions>
+  <button class="btn btn-success cen" mat-button (click)="save()">Save</button>
+</div>

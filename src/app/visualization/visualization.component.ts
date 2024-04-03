@@ -1,78 +1,262 @@
 import { Component, OnInit } from '@angular/core';
-import * as d3 from 'd3';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 import { Transaction } from '../transcation';
 import { SharedService } from '../shared.service';
+import { SavingModalComponent } from '../saving-modal/saving-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-visualization',
   templateUrl: './visualization.component.html',
-  styleUrls: ['./visualization.component.scss']
+  styleUrls: ['./visualization.component.scss'],
 })
 export class VisualizationComponent implements OnInit {
-  private svg: any;
   private transactions: Transaction[] = [];
-  private radius = 200; // Adjust as needed
-  private color = d3.scaleOrdinal(d3.schemeCategory10);
+  totalIncome: number = 0;
+  totalExpense: number = 0;
+  totalSaved: number = 0;
+  expectedAnnualSaving: number | null = null; 
+  selectedYear: number = new Date().getFullYear();
+  circumference: number = Math.PI * 100;
+  achievedSavingPercentage: number = 0;
 
-  constructor(private sharedService: SharedService) { }
+  private doughnutChart!: Chart<'doughnut', number[], string>;
+private barChart!: Chart<'bar', number[], string>;
+private lineChart!: Chart<'line', number[], string>;
+private savingsGoalTracker!: Chart<'doughnut', number[], string>;
 
+
+constructor(
+  private sharedService: SharedService,
+  private dialog: MatDialog) {}
+
+  openSavingModal(): void {
+    const dialogRef = this.dialog.open(SavingModalComponent, {
+      width: '280px',
+      data: { expectedAnnualSaving: this.expectedAnnualSaving }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.expectedAnnualSaving = result;
+        localStorage.setItem('expectedAnnualSaving', result.toString());
+      }
+    });
+  }
   ngOnInit(): void {
     const storedTransactions = localStorage.getItem('transactions');
     if (storedTransactions) {
       this.transactions = JSON.parse(storedTransactions);
     }
-    this.createPieChart();
+    const storedExpectedAnnualSaving = localStorage.getItem('expectedAnnualSaving');
+    if (storedExpectedAnnualSaving) {
+      this.expectedAnnualSaving = Number(storedExpectedAnnualSaving);
+    }
+    this.calculateTotals();
+    this.renderDoughnutChart();
+    this.renderBarChart();
+    this.renderLineChart();
+    this.updateCharts();
   }
 
-  createPieChart(): void {
-    // Remove the old chart if it exists
-    d3.select('svg').remove();
+ 
 
-    // Calculate income and expense
-    const income = this.transactions
-      .filter(transaction => transaction.type === 'income')
-      .reduce((acc, transaction) => acc + transaction.amount, 0);
-    const expense = this.transactions
-      .filter(transaction => transaction.type === 'expense')
-      .reduce((acc, transaction) => acc + transaction.amount, 0);
+  calculateTotals() {
+    this.totalIncome = 0;
+    this.totalExpense = 0;
+    for (let transaction of this.transactions) {
+      let year = new Date(transaction.date).getFullYear();
+      if (year === this.selectedYear) {
+        if (transaction.type === 'income') {
+          this.totalIncome += transaction.amount;
+        } else if (transaction.type === 'expense') {
+          this.totalExpense += transaction.amount;
+        }
+      }
+    }
+    this.totalSaved = this.totalIncome - this.totalExpense;
+    if (this.expectedAnnualSaving) {
+      this.achievedSavingPercentage = Math.min((this.totalSaved / this.expectedAnnualSaving) * 100, 100);
+    } else {
+      this.achievedSavingPercentage = 0;
+    }
+  }
+  renderDoughnutChart() {
+    let totalIncome = 0;
+    let totalExpense = 0;
+    for (let transaction of this.transactions) {
+      if (transaction.type === 'income') {
+        totalIncome += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        totalExpense += transaction.amount;
+      }
+    }
+  
+    if (this.doughnutChart) {
+      this.doughnutChart.data.datasets[0].data = [totalIncome, totalExpense];
+      this.doughnutChart.update();
+    } else {
+      this.doughnutChart = new Chart("doughnutChart", {
+        type: 'doughnut',
+        data: {
+          labels: ['Income', 'Expense'],
+          datasets: [{
+            label: 'Income vs Expense',
+            data: [totalIncome, totalExpense],
+            backgroundColor: ['rgba(0, 123, 255, 0.5)', 'rgba(220, 53, 69, 0.5)'],
+            borderColor: ['rgba(0, 123, 255, 1)', 'rgba(220, 53, 69, 1)'],
+            borderWidth: 1
+          }]
+        },
+      });
+    }
+  }
 
-    // Define the data for the pie chart
-    const data = [
-      { name: 'Income', value: income },
-      { name: 'Expense', value: expense }
-    ];
+  renderBarChart() {
+    let incomeByMonth = new Array(12).fill(0);
+    let expenseByMonth = new Array(12).fill(0);
+  
+    for (let transaction of this.transactions) {
+      let month = new Date(transaction.date).getMonth();
+      if (transaction.type === 'income') {
+        incomeByMonth[month] += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        expenseByMonth[month] += transaction.amount;
+      }
+    }
+  
+    if (this.barChart) {
+      this.barChart.data.datasets[0].data = incomeByMonth;
+      this.barChart.data.datasets[1].data = expenseByMonth;
+      this.barChart.update();
+    } else {
+      this.barChart = new Chart("barChart", {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Income',
+            data: incomeByMonth,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Expense',
+            data: expenseByMonth,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  }
 
-    // Create the SVG
-    this.svg = d3.select('body')
-      .append('svg')
-      .attr('width', this.radius * 2)
-      .attr('height', this.radius * 2)
-      .append('g')
-      .attr('transform', 'translate(' + this.radius + ',' + this.radius + ')');
+  renderLineChart() {
+    let incomeByMonth = new Array(12).fill(0);
+    let expenseByMonth = new Array(12).fill(0);
+  
+    for (let transaction of this.transactions) {
+      let month = new Date(transaction.date).getMonth();
+      if (transaction.type === 'income') {
+        incomeByMonth[month] += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        expenseByMonth[month] += transaction.amount;
+      }
+    }
+  
+    if (this.lineChart) {
+      this.lineChart.data.datasets[0].data = incomeByMonth;
+      this.lineChart.data.datasets[1].data = expenseByMonth;
+      this.lineChart.update();
+    } else {
+      this.lineChart = new Chart("lineChart", {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Income',
+            data: incomeByMonth,
+            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 1,
+            fill: false
+          }, {
+            label: 'Expense',
+            data: expenseByMonth,
+            backgroundColor: 'rgba(220, 53, 69, 0.5)',
+            borderColor: 'rgba(220, 53, 69, 1)',
+            borderWidth: 1,
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  }
 
-    // Create the pie chart
-  const pie = d3.pie<any>().value((d: any) => Number(d.value));
-  const path = d3.arc<any>()
-    .outerRadius(this.radius - 10)
-    .innerRadius(0);
+  updateCharts() {
+    this.calculateTotals();
+    this.renderDoughnutChart();
+    this.renderBarChart();
+    this.renderLineChart();
+  }
 
-  const arc = this.svg.selectAll('.arc')
-    .data(pie(data))
-    .enter().append('g')
-    .attr('class', 'arc');
+  getYears() {
+    let years: number[] = [];
 
-  arc.append('path')
-    .attr('d', path)
-    .attr('fill', (d: any) => this.color(d.data.name));
+    for (let transaction of this.transactions) {
+      let year = new Date(transaction.date).getFullYear();
+      if (!years.includes(year)) {
+        years.push(year);
+      }
+    }
+    return years;
+  }
 
-  // Add labels
-  const label = d3.arc<any>()
-    .outerRadius(this.radius)
-    .innerRadius(this.radius - 80);
+  incrementYear() {
+    this.selectedYear++;
+    this.updateCharts();
+  }
 
-  arc.append('text')
-    .attr('transform', (d: any) => 'translate(' + label.centroid(d) + ')')
-    .attr('dy', '0.35em')
-    .text((d: any) => d.data.name + ': ' + d.data.value);
-}
+  decrementYear() {
+    this.selectedYear--;
+    this.updateCharts();
+  }
+
+  addExpectedAnnualSaving() {
+    const saving = prompt('Enter your expected annual saving:');
+    if (saving) {
+      this.expectedAnnualSaving = Number(saving);
+    }
+  }
+
+  editExpectedAnnualSaving() {
+    const saving = prompt('Edit your expected annual saving:', this.expectedAnnualSaving?.toString() ?? '');
+    if (saving) {
+      this.expectedAnnualSaving = Number(saving);
+    }
+  }
+
+  saveExpectedAnnualSaving() {
+    const savingInput = document.getElementById('savingInput') as HTMLInputElement;
+    if (savingInput.value) {
+      this.expectedAnnualSaving = Number(savingInput.value);
+      localStorage.setItem('expectedAnnualSaving', savingInput.value);
+    }
+  }
 }
