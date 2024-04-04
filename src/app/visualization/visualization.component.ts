@@ -24,7 +24,8 @@ export class VisualizationComponent implements OnInit {
   private doughnutChart!: Chart<'doughnut', number[], string>;
 private barChart!: Chart<'bar', number[], string>;
 private lineChart!: Chart<'line', number[], string>;
-private savingsGoalTracker!: Chart<'doughnut', number[], string>;
+private mixChart!: Chart<'bar' | 'line', number[], string>;
+
 
 
 constructor(
@@ -39,10 +40,11 @@ constructor(
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.expectedAnnualSaving = result;
-        localStorage.setItem('expectedAnnualSaving', result.toString());
+          this.expectedAnnualSaving = result;
+          localStorage.setItem('expectedAnnualSaving', result.toString());
+          this.calculateTotals();  // Recalculate totals after the expected saving is updated
       }
-    });
+  });
   }
   ngOnInit(): void {
     const storedTransactions = localStorage.getItem('transactions');
@@ -58,30 +60,36 @@ constructor(
     this.renderBarChart();
     this.renderLineChart();
     this.updateCharts();
+    this.renderPolarAreaChart();
   }
 
- 
+  
 
   calculateTotals() {
     this.totalIncome = 0;
     this.totalExpense = 0;
     for (let transaction of this.transactions) {
-      let year = new Date(transaction.date).getFullYear();
-      if (year === this.selectedYear) {
-        if (transaction.type === 'income') {
-          this.totalIncome += transaction.amount;
-        } else if (transaction.type === 'expense') {
-          this.totalExpense += transaction.amount;
+        let year = new Date(transaction.date).getFullYear();
+        if (year === this.selectedYear) {
+            if (transaction.type === 'income') {
+                this.totalIncome += transaction.amount;
+            } else if (transaction.type === 'expense') {
+                this.totalExpense += transaction.amount;
+            }
         }
-      }
     }
     this.totalSaved = this.totalIncome - this.totalExpense;
     if (this.expectedAnnualSaving) {
-      this.achievedSavingPercentage = Math.min((this.totalSaved / this.expectedAnnualSaving) * 100, 100);
+        this.achievedSavingPercentage = Math.min((this.totalSaved / this.expectedAnnualSaving) * 100, 100);
+        // Convert the percentage to a string with 2 decimal places
+        this.achievedSavingPercentage = parseFloat(this.achievedSavingPercentage.toFixed(2));
     } else {
-      this.achievedSavingPercentage = 0;
+        this.achievedSavingPercentage = 0;
     }
-  }
+}
+
+
+
   renderDoughnutChart() {
     let totalIncome = 0;
     let totalExpense = 0;
@@ -113,6 +121,36 @@ constructor(
     }
   }
 
+  renderPolarAreaChart() {
+    let categoryTotals: { [key: string]: number } = {};
+  
+    // Calculate the total amount for each category
+    for (let transaction of this.transactions) {
+      if (!categoryTotals[transaction.name]) {
+        categoryTotals[transaction.name] = 0;
+      }
+      categoryTotals[transaction.name] += transaction.amount;
+    }
+  
+    // Create arrays for the labels and data
+    let labels = Object.keys(categoryTotals);
+    let data = Object.values(categoryTotals);
+  
+    // Create the chart
+    let polarAreaChart = new Chart('polarAreaChart', {
+      type: 'polarArea',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: ['rgba(255, 99, 132, 0.4)', 'rgba(54, 162, 235, 0.4)', 'rgba(255, 206, 86, 0.4)', 'rgba(75, 192, 192, 0.4)', 'rgba(153, 102, 255, 0.4)', 'rgba(255, 159, 64, 0.4)'],
+          borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
+          borderWidth: 1
+        }]
+      },
+    });
+  }
+  
   renderBarChart() {
     let incomeByMonth = new Array(12).fill(0);
     let expenseByMonth = new Array(12).fill(0);
@@ -138,8 +176,8 @@ constructor(
           datasets: [{
             label: 'Income',
             data: incomeByMonth,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(0, 192, 26, 0.2)',
+            borderColor: 'rgba(0, 192, 26, 1)',
             borderWidth: 1
           }, {
             label: 'Expense',
@@ -213,6 +251,7 @@ constructor(
     this.calculateTotals();
     this.renderDoughnutChart();
     this.renderBarChart();
+    this.renderPolarAreaChart();
     this.renderLineChart();
   }
 
@@ -259,4 +298,12 @@ constructor(
       localStorage.setItem('expectedAnnualSaving', savingInput.value);
     }
   }
+  resetExpectedAnnualSaving(): void {
+    this.expectedAnnualSaving = null;
+    localStorage.removeItem('expectedAnnualSaving');
+  this.updateCharts();
+  }
+
+  
+  
 }

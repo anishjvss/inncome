@@ -12,22 +12,25 @@
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.pie {
+.pie, #barchart {
   width: 212px !important;
   height: 212px !important;
 }
-
+#polarAreaChart{
+  width: 212px !important;
+  height: 212px !important;
+}
 h3, h2 {
   text-align: center;
 }
-#barchart{
-  width: 50px !important;
-  height: 50px !important;
-}
+// #barchart{
+//   width: 50px !important;
+//   height: 50px !important;
+// }
 
 #lineChart{
-  width: 360px !important;
-  height: 212px !important;
+  width: 600px !important;
+  height: 300px !important;
 }
 .income-field {
   background-color: rgb(0, 117, 0);
@@ -38,7 +41,7 @@ h3, h2 {
 }
 
 .addedit{
-  margin-left: 20px;
+  margin-left: 12px;
 }
 .bal {
   margin-left: 100px;
@@ -62,15 +65,11 @@ h3, h2 {
   margin-left: 12px;
 }
 .fy {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
   margin-top: 14px;
 }
 
-// .d-flex {
-//   display: flex;
-  
-// }
 .aj {
   display: flex;
   justify-content: center;
@@ -79,26 +78,97 @@ h3, h2 {
 }
 
 .progress-ring {
-  margin-right: 200px;
+  margin-right: 90px;
 }
 
-.progress-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: transparent;
-  position: relative;
-  transform: rotate(0 deg);
-  border: 10px solid #ccc;
-  border-top-color: #0026ff;
+.expsave{
+  margin-left: 90px;
+}
+.sp{
+  margin-left: 70px;
 }
 
-.progress-percentage {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 18px; /* Decrease the font size to decrease the length of the text */
-  font-weight: bold;
-  white-space: nowrap; /* Prevent the text from wrapping onto multiple lines */
+.inn{
+  margin-right: 50px;
+  margin-top: 18px;
+}
+
+.chart-row {
+  margin-bottom: 20px;
+}
+
+.bc{
+  padding: 20px;
+}
+
+
+.circular-chart {
+  display: block;
+  margin: 10px auto;
+  max-width: 70%;
+  max-height: 110px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+  stroke: #2000af; /* Change this to the color you want */
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.percentage {
+  fill: #0e0d0d;
+  font-family: sans-serif;
+  font-size: 0.5em; 
+  text-anchor: middle;
+}
+
+.percentage1 {
+  fill: #0a0a0a;
+  font-family: sans-serif;
+  font-size: 0.3em;
+  text-anchor: middle;
+}
+@media (max-width: 768px) {
+  .chart {
+    height: 200px !important; /* Adjust as needed */
+  }
+
+  /* Styles to display the expected saving amount, edit button, and SVG in one row */
+  .expsave, .percentage, .percentage1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #lineChart{
+    width: 430px !important;
+    height: 260px !important;
+  }
+  .bc{
+    padding: 55px;
+  }
+  .expsave{
+    margin-left: 2px;
+    font-size: 14px;
+  }
+  .circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 60%;
+    max-height: 80px;
+  }
 }

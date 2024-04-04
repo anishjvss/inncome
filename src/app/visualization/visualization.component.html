@@ -1,28 +1,40 @@
-<h2>Income and Expense Dashboard</h2>
+
 <div class="d-flex justify-content-center align-items-center aj mt-4">
-  <button class="btn btn-primary arrow" (click)="decrementYear()">
+  <h2 class="inn">Income and Expense Dashboard</h2>
+  <button class="btn btn-warning arrow" (click)="decrementYear()">
     <
   </button>
   <h4 class="fy mx-3">
     <strong>{{ selectedYear }}</strong>
   </h4>
-  <button class="btn btn-primary arrow" (click)="incrementYear()">
+  <button class="btn btn-warning arrow" (click)="incrementYear()">
     >
   </button>
 </div> <br>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <h3 class="bal">
+  <h3 class="expsave col-lg-4">
     <i class="fas fa-wallet"></i> 
-    <span class="h" [style.color]="'black'">Expected Annual Saving: Rs {{ expectedAnnualSaving }}</span>
-    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="!expectedAnnualSaving">Add</button>
-    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="expectedAnnualSaving">Edit</button>
+    <span class="h" [style.color]="'black'">Expected Annual Saving: Rs {{ expectedAnnualSaving || 'NaN' }}</span>
+    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="!expectedAnnualSaving"><i class="fas fa-plus"></i></button>
+    <button class="btn addedit btn-primary" (click)="openSavingModal()" *ngIf="expectedAnnualSaving"><i class="fas fa-edit"></i></button>
+    <button class="btn addedit btn-danger" (click)="resetExpectedAnnualSaving()" *ngIf="expectedAnnualSaving"><i class="fas fa-undo"></i></button>
   </h3>
-  <div class="progress-ring">
-  <div class="progress-circle" [ngStyle]="{'stroke-dashoffset': circumference - (achievedSavingPercentage / 100) * circumference}">
-    <span class="progress-percentage">{{achievedSavingPercentage}}%</span>
-  </div>
-</div>
+  <svg viewBox="0 0 36 36" class="pp circular-chart">
+  <path class="circle-bg"
+        d="M18 2.0845
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
+  />
+  <path class="circle"
+      [attr.stroke-dasharray]="achievedSavingPercentage + ', 100'"
+      d="M18 2.0845
+        a 15.9155 15.9155 0 0 1 0 31.831
+        a 15.9155 15.9155 0 0 1 0 -31.831"
+/>
+  <text x="19" y="19.5" class="percentage">{{achievedSavingPercentage}}%</text>
+  <text x="18" y="27" class="percentage1">Saved %</text>
+</svg>
 </div>
 <br>
 <div class="row mt-4">
@@ -52,14 +64,21 @@
     <h3>Doughnut Chart</h3>
     <canvas class="pie" id="doughnutChart"></canvas>
   </div>
-  <div class="col-lg-4 card">
+  <div class="bc col-lg-4 card">
     <h3>Bar Chart</h3>
     <canvas id="barChart"></canvas>
   </div>
   <div class="col-lg-4 card">
+    <h3>Polar Chart</h3>
+    <canvas id="polarAreaChart"></canvas>
+  </div>
+</div>
+<!-- <div class="row">
+  <div class="col-lg-4 card">
     <h3>Line Chart</h3>
     <canvas id="lineChart"></canvas>
   </div>
-</div>
+  
+</div> -->
 
 
