@@ -1,26 +1,34 @@
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   transition: 0.3s;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  border: 1px solid rgb(65, 65, 65);
 }
 
 .card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.pie, #barchart {
-  width: 212px !important;
-  height: 212px !important;
+.arrow {
+  background-color: rgb(230, 199, 255);
+  border: 1px solid black;
 }
-#polarAreaChart{
-  width: 212px !important;
-  height: 212px !important;
+
+.pie,
+#barchart {
+  width: 302px !important;
+  height: 302px !important;
 }
-h3, h2 {
+#polarAreaChart {
+  width: 300px !important;
+  height: 300px !important;
+}
+h3,
+h2 {
   text-align: center;
 }
 // #barchart{
@@ -28,19 +36,19 @@ h3, h2 {
 //   height: 50px !important;
 // }
 
-#lineChart{
+#lineChart {
   width: 600px !important;
   height: 300px !important;
 }
 .income-field {
   background-color: rgb(0, 117, 0);
   color: white;
-  border-radius: 10px; 
-  padding: 4px; 
+  border-radius: 10px;
+  padding: 4px;
   text-align: center;
 }
 
-.addedit{
+.addedit {
   margin-left: 12px;
 }
 .bal {
@@ -50,16 +58,17 @@ h3, h2 {
 .save-field {
   background-color: rgb(90, 90, 90);
   color: white;
-  border-radius: 10px; 
-  padding: 4px; 
-  text-align: center; }
+  border-radius: 10px;
+  padding: 4px;
+  text-align: center;
+}
 
 .expense-field {
   background-color: rgb(128, 0, 0);
   color: white;
-  border-radius: 10px; 
-  padding: 4px; 
-  text-align: center; 
+  border-radius: 10px;
+  padding: 4px;
+  text-align: center;
 }
 .h {
   margin-left: 12px;
@@ -81,14 +90,14 @@ h3, h2 {
   margin-right: 90px;
 }
 
-.expsave{
+.expsave {
   margin-left: 90px;
 }
-.sp{
+.sp {
   margin-left: 70px;
 }
 
-.inn{
+.inn {
   margin-right: 50px;
   margin-top: 18px;
 }
@@ -97,10 +106,9 @@ h3, h2 {
   margin-bottom: 20px;
 }
 
-.bc{
+.bc {
   padding: 20px;
 }
-
 
 .circular-chart {
   display: block;
@@ -132,7 +140,7 @@ h3, h2 {
 .percentage {
   fill: #0e0d0d;
   font-family: sans-serif;
-  font-size: 0.5em; 
+  font-size: 0.5em;
   text-anchor: middle;
 }
 
@@ -148,20 +156,34 @@ h3, h2 {
   }
 
   /* Styles to display the expected saving amount, edit button, and SVG in one row */
-  .expsave, .percentage, .percentage1 {
+  .expsave,
+  .percentage,
+  .percentage1 {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
   }
-  #lineChart{
+  #lineChart {
     width: 430px !important;
-    height: 260px !important;
+    height: 200px !important;
   }
-  .bc{
+  #polarAreaChart {
+    width: 230px !important;
+    height: 230px !important;
+  }
+  #doughnutChart {
+    width: 230px !important;
+    height: 230px !important;
+  }
+  #barChart {
+    width: 380px !important;
+    height: 200px !important;
+  }
+  .bc {
     padding: 55px;
   }
-  .expsave{
+  .expsave {
     margin-left: 2px;
     font-size: 14px;
   }
@@ -170,5 +192,14 @@ h3, h2 {
     margin: 10px auto;
     max-width: 60%;
     max-height: 80px;
+  }
+  .mt {
+    margin: 30px;
+  }
+  .pp {
+    margin-left: 5px;
+  }
+  .arr {
+    margin-left: 15px;
   }
 }

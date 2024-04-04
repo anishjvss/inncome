@@ -1,5 +1,5 @@
 {
-  "name": "anish-code",
+  "name": "expense_tracker",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
