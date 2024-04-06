@@ -4,7 +4,8 @@ import { TrackerComponent } from './tracker/tracker.component';
 import { VisualizationComponent } from './visualization/visualization.component';
 
 const routes: Routes = [
-  { path: '', component: TrackerComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: TrackerComponent },
   { path: 'analytics', component: VisualizationComponent },
 ];
 

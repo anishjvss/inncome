@@ -8,7 +8,8 @@
 
   .navi{
     margin-right: 275px;
-    font-size:medium;
+    font-size:120%;
+    font-weight: 500;
   }
   
   .form-control {
@@ -34,26 +35,16 @@
     padding-bottom: 7px;
 }
   
-  .header-nav .nav-item ul li a:hover {
-    color: #0056b3;
-  }
+
   
   .header-nav  {
     display: flex;
     justify-content: flex-end;
+     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+     background-color: #a6ffb9;
   }
-  
-  .header-nav  {
-    color: #fff;
-  }
-  
-  .header-nav {
-    color: #fff;
-  }
-  
-  .header-nav {
-    background-color: #e6e6e6;
-  }
+   
+ 
   
   .header-nav .nav-img {
     padding: 0;
@@ -73,7 +64,7 @@
   }
   
   .header-nav .nav-item ul li a:hover {
-    color: #0056b3;
+    color: #1201ff;
   }
   
   .header-nav .appoint {

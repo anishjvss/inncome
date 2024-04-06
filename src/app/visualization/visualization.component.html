@@ -14,7 +14,7 @@
   <h3 class="expsave col-lg-4">
     <i class="fas fa-wallet"></i>
     <span class="h" [style.color]="'black'"
-      >Expected Annual Saving: Rs {{ expectedAnnualSaving || "NaN" }}</span
+      >Expected Annual Saving: Rs {{ expectedAnnualSaving || "0" }}</span
     >
     <button
       class="btn addedit btn-primary"
@@ -85,21 +85,21 @@
 </div>
 <br />
 <div class="row">
-  <div class="col-lg-6 mt card">
+  <div class="col-lg-6 mt col-md-12 mb-4 card">
     <h3>Doughnut Chart</h3>
     <canvas class="pie" id="doughnutChart"></canvas>
   </div>
-  <div class="bc col-lg-6 mt card">
+  <div class="bc col-lg-6 mtcol-md-12 mb-4 card">
     <h3>Bar Chart</h3>
     <canvas id="barChart"></canvas>
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-6 mt card">
+  <div class="col-lg-6 mt col-md-12 mb-4 card">
     <h3>Line Chart</h3>
     <canvas id="lineChart"></canvas>
   </div>
-  <div class="col-lg-6 mt card">
+  <div class="col-lg-6 mt col-md-12 mb-4 card">
     <h3>Polar Chart</h3>
     <canvas id="polarAreaChart"></canvas>
   </div>

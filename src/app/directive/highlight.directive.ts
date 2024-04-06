@@ -10,7 +10,7 @@ export class HighlightDirective implements OnChanges {
 
   ngOnChanges() {
     if (this.type === 'income') {
-      this.el.nativeElement.style.color = 'green';
+      this.el.nativeElement.style.color = 'darkgreen';
     } else if (this.type === 'expense') {
       this.el.nativeElement.style.color = 'red';
     }

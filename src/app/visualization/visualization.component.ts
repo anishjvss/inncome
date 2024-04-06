@@ -32,37 +32,47 @@ export class VisualizationComponent implements OnInit {
   ) {}
 
   openSavingModal(): void {
-    const dialogRef = this.dialog.open(SavingModalComponent, {
-      width: '280px',
-      data: { expectedAnnualSaving: this.expectedAnnualSaving },
-    });
+  const dialogRef = this.dialog.open(SavingModalComponent, {
+    width: '280px',
+    data: { expectedAnnualSaving: this.getExpectedAnnualSaving() },
+  });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.expectedAnnualSaving = result;
-        localStorage.setItem('expectedAnnualSaving', result.toString());
-        this.calculateTotals(); // Recalculate totals after the expected saving is updated
-      }
-    });
+  dialogRef.afterClosed().subscribe((result) => {
+  if (result !== null && result !== undefined) {
+    this.setExpectedAnnualSaving(result);
+    this.calculateTotals(); // Recalculate totals after the expected saving is updated
   }
-  ngOnInit(): void {
-    const storedTransactions = localStorage.getItem('transactions');
-    if (storedTransactions) {
-      this.transactions = JSON.parse(storedTransactions);
-    }
-    const storedExpectedAnnualSaving = localStorage.getItem(
-      'expectedAnnualSaving'
-    );
-    if (storedExpectedAnnualSaving) {
-      this.expectedAnnualSaving = Number(storedExpectedAnnualSaving);
-    }
-    this.calculateTotals();
-    this.renderDoughnutChart();
-    this.renderBarChart();
-    this.renderLineChart();
-    this.updateCharts();
-    this.renderPolarAreaChart();
+});
+}
+  // ... other parts of your code ...
+
+ngOnInit(): void {
+  const storedTransactions = localStorage.getItem('transactions');
+  if (storedTransactions) {
+    this.transactions = JSON.parse(storedTransactions);
   }
+  this.expectedAnnualSaving = this.getExpectedAnnualSaving();
+  this.calculateTotals();
+  this.renderDoughnutChart();
+  this.renderBarChart();
+  this.renderLineChart();
+  this.updateCharts();
+  this.renderPolarAreaChart();
+}
+
+
+
+    getExpectedAnnualSaving(): number | null {
+  const storedExpectedAnnualSaving = localStorage.getItem(
+    'expectedAnnualSaving' + this.selectedYear
+  );
+  return storedExpectedAnnualSaving ? Number(storedExpectedAnnualSaving) : null;
+}
+
+setExpectedAnnualSaving(saving: number): void {
+  localStorage.setItem('expectedAnnualSaving' + this.selectedYear, saving.toString());
+  this.expectedAnnualSaving = saving;
+}
 
   calculateTotals() {
     this.totalIncome = 0;
@@ -325,44 +335,49 @@ export class VisualizationComponent implements OnInit {
   }
 
   incrementYear() {
-    this.selectedYear++;
-    this.updateCharts();
-  }
+  this.selectedYear++;
+  this.expectedAnnualSaving = this.getExpectedAnnualSaving();
+  this.updateCharts();
+}
 
-  decrementYear() {
-    this.selectedYear--;
-    this.updateCharts();
-  }
+decrementYear() {
+  this.selectedYear--;
+  this.expectedAnnualSaving = this.getExpectedAnnualSaving();
+  this.updateCharts();
+}
 
-  addExpectedAnnualSaving() {
-    const saving = prompt('Enter your expected annual saving:');
-    if (saving) {
-      this.expectedAnnualSaving = Number(saving);
-    }
+addExpectedAnnualSaving() {
+  const saving = prompt('Enter your expected annual saving:');
+  if (saving) {
+    this.setExpectedAnnualSaving(Number(saving));
+    this.calculateTotals(); // Recalculate totals after the expected saving is updated
   }
+}
 
-  editExpectedAnnualSaving() {
-    const saving = prompt(
-      'Edit your expected annual saving:',
-      this.expectedAnnualSaving?.toString() ?? ''
-    );
-    if (saving) {
-      this.expectedAnnualSaving = Number(saving);
-    }
+editExpectedAnnualSaving() {
+  const saving = prompt(
+    'Edit your expected annual saving:',
+    this.getExpectedAnnualSaving()?.toString() ?? ''
+  );
+  if (saving) {
+    this.setExpectedAnnualSaving(Number(saving));
+    this.calculateTotals(); // Recalculate totals after the expected saving is updated
   }
+}
 
-  saveExpectedAnnualSaving() {
-    const savingInput = document.getElementById(
-      'savingInput'
-    ) as HTMLInputElement;
-    if (savingInput.value) {
-      this.expectedAnnualSaving = Number(savingInput.value);
-      localStorage.setItem('expectedAnnualSaving', savingInput.value);
-    }
+saveExpectedAnnualSaving() {
+  const savingInput = document.getElementById(
+    'savingInput'
+  ) as HTMLInputElement;
+  if (savingInput.value) {
+    this.setExpectedAnnualSaving(Number(savingInput.value));
+    this.calculateTotals(); // Recalculate totals after the expected saving is updated
   }
+}
+
   resetExpectedAnnualSaving(): void {
-    this.expectedAnnualSaving = null;
-    localStorage.removeItem('expectedAnnualSaving');
-    this.updateCharts();
-  }
+  localStorage.removeItem('expectedAnnualSaving' + this.selectedYear);
+  this.expectedAnnualSaving = null;
+  this.updateCharts();
+}
 }

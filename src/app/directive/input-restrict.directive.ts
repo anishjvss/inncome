@@ -8,22 +8,25 @@ export class InputRestrictDirective {
 
   constructor(private el: ElementRef) { }
 
-  @HostListener('input', ['$event']) onInputChange(event: Event) {
-    const initalValue = this.el.nativeElement.value;
-
-    switch (this.allowedChars) {
-      case 'alphabet':
-        this.el.nativeElement.value = initalValue.replace(/[^a-zA-Z]*/g, '');
-        break;
-      case 'number':
-        this.el.nativeElement.value = initalValue.replace(/[^0-9]*/g, '');
-        break;
-      default:
-        break;
-    }
-
-    if (initalValue !== this.el.nativeElement.value) {
-      event.stopPropagation();
-    }
+  @HostListener('keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
+  const controlKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete'];
+  if (controlKeys.includes(event.key)) {
+    return;  // Don't block control keys
   }
+
+  switch (this.allowedChars) {
+    case 'alphabet':
+      if (!event.key.match(/^[a-zA-Z]$/)) {
+        event.preventDefault();
+      }
+      break;
+    case 'number':
+      if (!event.key.match(/^[0-9]$/)) {
+        event.preventDefault();
+      }
+      break;
+    default:
+      break;
+  }
+}
 }
