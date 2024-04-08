@@ -22,10 +22,12 @@ export class TrackerComponent {
   editMode: boolean = false;
   editId: number | null = null;
   filterYear: number = new Date().getFullYear();
+  paymentMode: '' | 'UPI' | 'Cash' | 'Bank Transfer' | 'Others';
 
   constructor(private sharedService: SharedService) {
     this.loadTransactions();
     this.calculateTotals();
+    this.paymentMode = '';
   }
 
   loadTransactions() {
@@ -66,6 +68,7 @@ export class TrackerComponent {
       amount: Number(this.amount),
       date: this.date,
       name: this.name,
+      paymentMode: this.paymentMode,
     };
     this.transactions.push(newTransaction);
     this.sortTransactions();
@@ -85,6 +88,7 @@ export class TrackerComponent {
       this.name = transaction.name;
       this.editMode = true;
       this.editId = id;
+      this.paymentMode = transaction.paymentMode;
     }
   }
 
@@ -106,6 +110,7 @@ export class TrackerComponent {
       amount: Number(this.amount),
       date: this.date,
       name: this.name,
+      paymentMode: this.paymentMode,
     };
 
     const filteredIndex = this.filteredTransactions.findIndex(
@@ -162,6 +167,7 @@ export class TrackerComponent {
     this.name = '';
     this.editMode = false;
     this.editId = null;
+    this.paymentMode = '';
   }
 
   incrementYear() {

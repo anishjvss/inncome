@@ -1,2 +1,21 @@
 <app-header></app-header>
-<router-outlet></router-outlet>
+<div class="main-content">
+    <router-outlet></router-outlet>
+</div>
+<mat-toolbar class="bottom-nav-bar">
+    <span class="bottom-nav-item">
+      <a routerLink="/home" routerLinkActive="active">
+        <mat-icon [class]="getIconClass('/home')">home</mat-icon>
+      </a>
+    </span>
+    <span class="bottom-nav-item">
+      <a routerLink="/add" routerLinkActive="active">
+        <mat-icon [class]="getIconClass('/add')">add</mat-icon>
+      </a>
+    </span>
+    <span class="bottom-nav-item">
+      <a routerLink="/analytics" routerLinkActive="active">
+        <mat-icon [class]="getIconClass('/analytics')">bar_chart</mat-icon>
+      </a>
+    </span>
+  </mat-toolbar>

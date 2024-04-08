@@ -13,9 +13,12 @@ import { VisualizationComponent } from './visualization/visualization.component'
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SavingModalComponent } from './saving-modal/saving-modal.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [AppComponent, HighlightDirective, MonthFilterPipe, InputRestrictDirective, TrackerComponent, HeaderComponent, VisualizationComponent, SavingModalComponent],
-  imports: [MatDialogModule,BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
+  imports: [BrowserAnimationsModule,MatToolbarModule,MatIconModule, MatDialogModule,BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

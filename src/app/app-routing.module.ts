@@ -6,6 +6,7 @@ import { VisualizationComponent } from './visualization/visualization.component'
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: TrackerComponent },
+  { path: 'add', component: TrackerComponent },
   { path: 'analytics', component: VisualizationComponent },
 ];
 
